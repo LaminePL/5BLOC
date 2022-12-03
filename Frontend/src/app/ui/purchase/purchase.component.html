@@ -1,0 +1,99 @@
+<mat-vertical-stepper [linear]="true" #stepper class="form-stepper">
+  <mat-step [stepControl]="firstFormGroup">
+    <form [formGroup]="firstFormGroup" (ngSubmit)="onSubmit()">
+      <ng-template matStepLabel>Type de Transport :</ng-template>
+
+      <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+        formControlName="transport">
+        <mat-radio-button class="example-radio-button" *ngFor="let transport of transports" value="{{transport}}">
+          {{transport}}
+        </mat-radio-button>
+      </mat-radio-group>
+      <div>
+        <button mat-button matStepperNext [disabled]="!firstFormGroup.valid">Suivant</button>
+      </div>
+
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup">
+    <form [formGroup]="secondFormGroup" (ngSubmit)="onSubmit()">
+      <ng-template matStepLabel>Choisir le Trajet :
+      </ng-template>
+      <div class="stations-block">
+        <mat-form-field appearance="fill">
+          <mat-label>Depart : </mat-label>
+          <mat-select formControlName="departure">
+            <mat-option *ngFor="let station of stations" value="{{station}}">
+              {{station}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Arrivé : </mat-label>
+          <mat-select formControlName="arrival">
+            <mat-option *ngFor="let station of stations" value="{{station}}">
+              {{station}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Recapitulatif de l'achat :
+    </ng-template>
+    <div class="stepper-3">
+      <div class="ticket-block">
+        <div class="cardWrap">
+          <div class="card cardLeft">
+            <h1>SupRailRoad & co </h1>
+            <div class="title">
+              <h2>Moyen de transport</h2>
+              <span>{{transport}}</span>
+            </div>
+            <div class="name">
+              <h2>Départ :</h2>
+              <span>{{departure}}</span>
+            </div>
+            <div class="name">
+              <h2>Arrivé :</h2>
+              <span>{{arrival}}</span>
+            </div>
+            <div class="seat">
+              <h2>156</h2>
+              <span>Siége</span>
+            </div>
+            <div class="time">
+              <h2>--:--</h2>
+              <span>Heure de départ </span>
+            </div>
+
+          </div>
+          <div class="card cardRight">
+            <div class="eye"></div>
+            <div class="number">
+              <h3>156</h3>
+              <span>Siége</span>
+            </div>
+            <div class="barcode"></div>
+          </div>
+
+        </div>
+      </div>
+      <button mat-raised-button color="accent" (click)="sendEth($event)" style="float: right">
+
+        <mat-icon>lock</mat-icon>
+        <mat-icon>input</mat-icon>&nbsp;Buy Ticket
+      </button>
+    </div>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="stepper.reset()">Reset</button>
+    </div>
+  </mat-step>
+</mat-vertical-stepper>

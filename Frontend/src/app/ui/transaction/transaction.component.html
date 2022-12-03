@@ -1,0 +1,45 @@
+<div class="container">
+  <h1 class="upcomming">Historique des Achats</h1>
+  <div class="transport-list">
+    <div class="item" *ngFor="let transaction of transactionHistory">
+      <div class="item-right">
+        <div class="img-transport" *ngIf="transaction?.name == 'Train'">
+          <mat-icon> train</mat-icon>
+        </div>
+
+        <div class="img-transport" *ngIf="transaction?.name == 'Bus'">
+          <mat-icon> directions_bus</mat-icon>
+        </div>
+
+        <div class="img-transport" *ngIf="transaction?.name == 'Metro'">
+          <mat-icon> tram</mat-icon>
+        </div>
+
+        <span class="up-border"></span>
+        <span class="down-border"></span>
+      </div> <!-- end item-right -->
+
+      <div class="item-left">
+        <p class="event">SupRailRoad & co. </p>
+        <h2 class="title">Ticket de {{transaction?.name}}</h2>
+
+        <div class="sce">
+          <div class="icon">
+            <i class="fa fa-table"></i>
+          </div>
+          <p>Monday 15th 2016 <br /> 15:20Pm & 11:00Am</p>
+        </div>
+        <div class="fix"></div>
+        <div class="loc">
+          <div class="icon">
+            <i class="fa fa-map-marker"></i>
+          </div>
+          <p>North,Soth, United State , Amre <br /> Party Number 16,20</p>
+        </div>
+        <div class="fix"></div>
+        <button class="tickets">Tickets</button>
+      </div> <!-- end item-right -->
+    </div> <!-- end item -->
+  </div>
+
+</div>
