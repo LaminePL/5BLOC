@@ -1,0 +1,29 @@
+<div class="container p-2">
+
+<div *ngIf="cards.length == 0" class="text-center m-3 text-dark"> <strong> No card found </strong></div>
+
+<div class="row row-cols-1 row-cols-md-3 color-black" *ngIf="cards.length > 0">
+    <div class="col mb-4" *ngFor="let cardNFT of cards">
+    <div class="card h-100" >
+        <img  [src]="cardNFT.card.image_url" alt="card image" class="card-img-top h-50" alt="Fissure in Sandstone"/>
+        <div class="card-body">
+          <h5 class="card-title">{{cardNFT.card.name}}</h5>
+          <div class="row">
+          <span class="bg-warning col">{{cardNFT.card.price}}&nbsp;$</span>
+          <span class="bg-warning col text-end">{{cardNFT.card.reduction}}%</span>
+        </div>
+          <p class="card-text max-lines-3">{{cardNFT.card.description}}</p>
+
+
+          <div class="button-container" >
+            <span *ngIf="!address && isAdmin"><strong>(Admin ne peut pas acheter ses cartes)</strong></span>
+            <button mat-raised-button color="accent" (click)="buyCard(cardNFT.id, cardNFT.card.price)" *ngIf="!address && !isAdmin">Acheter</button>
+            <button mat-raised-button color="accent" (click)="sendCard(cardNFT.id)" *ngIf="!!address">Envoyer</button>
+            &nbsp;
+        </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+</div>

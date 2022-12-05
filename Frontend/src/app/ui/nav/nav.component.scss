@@ -1,0 +1,23 @@
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.mat-drawer-container{
+  background-color: white !important;
+}
+
+.sidenav{
+background-color: brown;
+position: fixed;
+width: 18%;}
+
+.sidenav-content{
+  position: fixed;
+  width: 82%;
+}
+
+.body-router{
+  position: fixed;
+    height: 100%;
+    width: 82%;
+}
