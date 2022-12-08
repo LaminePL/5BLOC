@@ -29,6 +29,8 @@ contract Card is ERC721URIStorage, Ownable,ERC721Holder  {
     // events
     event NftBought(address _seller, address _buyer, uint256 _price);
 
+    event NftSent(address _seller, address _buyer);
+
     //mappings
     mapping(address => uint256[]) public userOwnedCards;
 
@@ -86,7 +88,7 @@ contract Card is ERC721URIStorage, Ownable,ERC721Holder  {
     }
 
     function getCardsByOwner(address owner) public view returns (cardResponse[] memory)  {
-        uint ownedCardsCount = userOwnedCards[owner].length;
+        uint ownedCardsCount = userOwnedCards[owner].length ;
         cardResponse[] memory result = new cardResponse[](ownedCardsCount);
 
         for (uint i = 0; i < ownedCardsCount; i++) {
@@ -96,8 +98,6 @@ contract Card is ERC721URIStorage, Ownable,ERC721Holder  {
         return result;
     }
 
-
-    
     function buyCard(address _buyer,uint256 _cardId) public payable {
         require(_exists(_cardId), "transfer of non existing token");
        require(_buyer.balance >= msg.value, 'Solde insuffisant');
@@ -109,6 +109,18 @@ contract Card is ERC721URIStorage, Ownable,ERC721Holder  {
     }
 
     function sendCard(address _to,uint256 _cardId) public payable onlyOwnerOf(_cardId) {
+        address _seller = ownerOf(_cardId);
+        require(_to != _seller,'Can not send to self');
+
+        approve(address(this),_cardId);
+        _transferCard(_seller, payable(_to), _cardId);
+        if(msg.value > 0)
+            payable(_seller).transfer(msg.value);
+        emit NftSent(_seller, _to);
+    }
+
+
+   function saleCard(address _to,uint256 _cardId) public payable onlyOwnerOf(_cardId) {
         require(_to.balance >= msg.value, 'Solde insuffisant');
         address _seller = ownerOf(_cardId);
         require(_to != _seller,'Can not send to self');
@@ -119,7 +131,6 @@ contract Card is ERC721URIStorage, Ownable,ERC721Holder  {
             payable(_seller).transfer(msg.value);
         emit NftBought(_seller, _to, msg.value);
     }
-
 
 
 

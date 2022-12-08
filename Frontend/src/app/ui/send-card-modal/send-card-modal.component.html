@@ -1,19 +1,31 @@
-<h1 mat-dialog-title>Destination</h1>
-<div mat-dialog-content class="row" [formGroup]="form" >
+<div *ngIf="!data">
 
-  <mat-form-field appearance="outline" class="col">
-    <mat-label>Adresse</mat-label>
-    <input matInput placeholder="Adresse" formControlName="address">
-  </mat-form-field>
+  <h1 mat-dialog-title>Destination</h1>
+  <div mat-dialog-content class="row" [formGroup]="form" >
+
+    <mat-form-field appearance="outline" class="col" >
+      <mat-label>Adresse</mat-label>
+      <input matInput placeholder="Adresse" formControlName="address">
+    </mat-form-field>
+    </div>
+
+</div>
+
+<div *ngIf="data" >
+  <h1 mat-dialog-title>Prix</h1>
+  <div mat-dialog-content class="row" [formGroup]="form" >
+
 
     <mat-form-field appearance="outline" class="col">
-      <mat-label>Prix (ETH)</mat-label>
+      <mat-label>Veuillez séléctionner le prix de vente </mat-label>
       <input matInput type="number" min=0 placeholder="Prix  ETH" formControlName="price">
       <mat-hint></mat-hint>
     </mat-form-field>
 
 
 </div>
+</div>
+
 <div mat-dialog-actions>
   <button mat-button mat-dialog-close>Fermer</button>
   <button mat-button [disabled]="!form.valid" (click)="validate($event)">Valider</button>

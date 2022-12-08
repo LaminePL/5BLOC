@@ -145,7 +145,7 @@ export class ContractService {
     });
   }
 
-  async sendNFTCard(to,tokenId,price){
+  async sendNFTCard(to,tokenId){
     await this.connectAccount();
     return new Promise((resolve, reject) => {
       const cardContract = contract(cardTokenAbi);
@@ -154,7 +154,29 @@ export class ContractService {
         return instance.sendCard(
           to,
           tokenId,
-          {from: this.accounts[0], value: Web3.utils.toWei(String(price), 'ether'),  gas:1000000}
+          {from: this.accounts[0],  gas:1000000}
+          );
+      }).then((status) => {
+        if (status) {
+          return resolve(status);
+        }
+      }).catch((error) => {
+        console.log(error);
+        return reject('Error buying card');
+      });
+    });
+  }
+
+  async saleCard(to,tokenId){
+    await this.connectAccount();
+    return new Promise((resolve, reject) => {
+      const cardContract = contract(cardTokenAbi);
+      cardContract.setProvider(this.provider);
+      cardContract.deployed().then((instance) => {
+        return instance.sendCard(
+          to,
+          tokenId,
+          {from: this.accounts[0],  gas:1000000}
           );
       }).then((status) => {
         if (status) {

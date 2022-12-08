@@ -20,7 +20,12 @@
             <button mat-raised-button color="accent" (click)="buyCard(cardNFT.id, cardNFT.card.price)" *ngIf="!address && !isAdmin">Acheter</button>
             <button mat-raised-button color="accent" (click)="sendCard(cardNFT.id)" *ngIf="!!address">Envoyer</button>
             &nbsp;
+            <button mat-raised-button color="accent" (click)="saleCard(cardNFT.id)" *ngIf="!!address">Vendre</button>
+
         </div>
+        &nbsp;
+
+
         </div>
       </div>
     </div>

@@ -25,7 +25,6 @@ export class PinataService {
         return this.httpClient.post<PinataResponse>(`${this.api_url}/pinning/pinJSONToIPFS`,json)
      }
 
-
      getCard(url:string):Observable<Card>{
       return this.httpClient.get<Card>(url);
    }

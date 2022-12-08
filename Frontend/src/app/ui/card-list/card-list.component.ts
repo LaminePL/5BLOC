@@ -47,12 +47,13 @@ export class CardListComponent implements OnInit {
         })
       });
       this.loader.hide();
+
     })
       .catch(err => {
         this.loader.hide();
         this.notifacationService.error("Error while getting NFT cards");
       });
-
+   console.log(this.cards.length);
   }
 
   buyCard(id, price) {
@@ -68,23 +69,46 @@ export class CardListComponent implements OnInit {
   }
 
 
-  sendCard(id) {
-    const dialogRef = this.dialog.open(SendCardModalComponent);
+  sendCard(id, isForSale) {
+    const dialogRef = this.dialog.open(SendCardModalComponent, {data: isForSale = false});
     dialogRef.afterClosed().subscribe( res => {
       if(res){
-        console.log(res)
-        this.loader.show();
-        this.contract.sendNFTCard(res.to,id,res.price).then(test => {
-          this.loader.hide();
-          this.notifacationService.success("Card NFT sended succefuly");
-          this.ngOnInit();
-        }).catch(err => {
-          this.loader.hide();
-          this.notifacationService.error("Error while sending NFT card");
-        });
+      if (res.to !== ""){
+         this.loader.show();
+         this.contract.sendNFTCard(res.to,id).then(test => {
+         this.loader.hide();
+         this.notifacationService.success("Card NFT sended succefuly");
+         this.ngOnInit();
+       }).catch(err => {
+         this.loader.hide();
+        this.notifacationService.error("Error while sending NFT card");
+      });
+          }
       }
     })
 
   }
+
+  saleCard(id, isForSale) {
+    const dialogRef = this.dialog.open(SendCardModalComponent, {data: isForSale = true});
+
+    dialogRef.afterClosed().subscribe( res => {
+      if(res){
+      if (res.price > 0){
+         this.loader.show();
+         this.contract.saleCard(res.to,id).then(test => {
+         this.loader.hide();
+         this.notifacationService.success("Card NFT sended succefuly");
+         this.ngOnInit();
+       }).catch(err => {
+         this.loader.hide();
+        this.notifacationService.error("Error while sending NFT card");
+      });
+          }
+      }
+    })
+
+  }
+
 
 }
