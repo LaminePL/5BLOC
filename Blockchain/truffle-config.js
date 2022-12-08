@@ -9,7 +9,7 @@ module.exports = {
       host: "127.0.0.1",
       port: 7545,
       network_id: "5777",
-      from:"0x99d24C766EB55e74381d0ac6d6BC59577905eCD7"
+      from:"0x9D8c5C498EdB020a4704DE0B7CFB2C30d6c24630"
     }
   },
   compilers: {

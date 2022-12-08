@@ -1,0 +1,124 @@
+<mat-vertical-stepper [linear]="true" #stepper class="form-stepper">
+  <mat-step [editable]="true">
+    <ng-template matStepLabel>Type de Transport :</ng-template>
+    <mat-radio-group
+      aria-labelledby="example-radio-group-label"
+      class="example-radio-group"
+      [(ngModel)]="chosenTransport">
+      <mat-radio-button class="example-radio-button" *ngFor="let transport of transportsList" [value]="transport">
+        {{transport}}
+      </mat-radio-button>
+    </mat-radio-group>
+    <div>
+      <button mat-button matStepperNext [disabled]="!chosenTransport">Suivant</button>
+    </div>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Choisir le Trajet :
+    </ng-template>
+    <div class="stations-block">
+      <mat-form-field appearance="fill">
+        <mat-label>Depart :</mat-label>
+        <mat-select [(ngModel)]="departure">
+          <mat-option *ngFor="let station of stations" value="{{station}}">
+            {{station}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Arrivé :</mat-label>
+        <mat-select [(ngModel)]="arrival">
+          <mat-option *ngFor="let station of stations" value="{{station}}">
+            {{station}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+
+    </div>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext [disabled]="!arrival || !departure">Next</button>
+    </div>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Horaires Dinsponible :
+    </ng-template>
+    <div class="stations-block">
+      <mat-form-field appearance="fill">
+        <mat-label>Arrivé :</mat-label>
+        <mat-select [(ngModel)]="departureDay">
+          <mat-option *ngFor="let day of weekDay" value="{{day}}">
+            {{day}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>heure de départ :</mat-label>
+        <mat-select [(ngModel)]="travelTime">
+          <mat-option *ngFor="let horaire of horaires" value="{{horaire}}">
+            {{horaire}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </div>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext [disabled]="!travelTime">Next</button>
+    </div>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Recapitulatif de l'achat :
+    </ng-template>
+    <div class="stepper-3">
+      <div class="ticket-block">
+        <div class="cardWrap">
+          <div class="card cardLeft">
+            <h1>SupRailRoad & co </h1>
+            <div class="title">
+              <h2>Moyen de transport</h2>
+              <span>{{chosenTransport}}</span>
+            </div>
+            <div class="name">
+              <h2>Départ :</h2>
+              <span>{{departure}}</span>
+            </div>
+            <div class="name">
+              <h2>Arrivé :</h2>
+              <span>{{arrival}}</span>
+            </div>
+            <div class="seat">
+              <h2>156</h2>
+              <span>Siége</span>
+            </div>
+            <div class="time">
+              <h2>{{travelTime}}</h2>
+              <span>Heure de départ </span>
+            </div>
+
+          </div>
+          <div class="card cardRight">
+            <div class="eye"></div>
+            <div class="number">
+              <h3>156</h3>
+              <span>Siége</span>
+            </div>
+            <div class="barcode"></div>
+          </div>
+
+        </div>
+      </div>
+      <button mat-raised-button color="accent" (click)="sendEth($event)" style="float: right">
+
+        <mat-icon>lock</mat-icon>
+        <mat-icon>input</mat-icon>&nbsp;Buy Ticket
+      </button>
+    </div>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="stepper.reset()">Reset</button>
+    </div>
+  </mat-step>
+</mat-vertical-stepper>
