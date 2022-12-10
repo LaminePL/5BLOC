@@ -7,7 +7,6 @@
 }
 
 .sidenav{
-background-color: brown;
 position: fixed;
 width: 18%;}
 
@@ -20,4 +19,28 @@ width: 18%;}
   position: fixed;
     height: 100%;
     width: 82%;
+}
+.mat-toolbar-row, .mat-toolbar-single-row {
+  height: 95px;
+  background-color: #FF7851;
+}
+.mat-toolbar.mat-primary {
+  color: #fff;
+}
+.nav-list{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 52px;
+}
+.title {
+  color: black;
+}
+.logo{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
 }

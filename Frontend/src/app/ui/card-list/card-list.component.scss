@@ -13,3 +13,9 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
   }
+
+  .card-list{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }

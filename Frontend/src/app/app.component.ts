@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, OnInit} from '@angular/core';
 import { LoaderService } from './services/loader/loader.service';
 
 @Component({
@@ -9,10 +9,14 @@ import { LoaderService } from './services/loader/loader.service';
 export class AppComponent implements OnInit{
   title = 'AngularDapp';
   loading :boolean;
-  constructor(public loader: LoaderService,private cdRef:ChangeDetectorRef){
+  constructor(private elementRef: ElementRef, public loader: LoaderService,private cdRef:ChangeDetectorRef){
+
 
   }
-
+  ngAfterViewInit() {
+    this.elementRef.nativeElement.ownerDocument
+      .body.style.backgroundColor = 'whitesmoke';
+  }
   ngOnInit(): void {
       this.loader.loading$.subscribe(value =>{
         this.loading = value;

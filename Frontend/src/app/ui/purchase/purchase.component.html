@@ -1,3 +1,4 @@
+<mat-card class="stepper">
 <mat-vertical-stepper [linear]="true" #stepper class="form-stepper">
   <mat-step [editable]="true">
     <ng-template matStepLabel>Type de Transport :</ng-template>
@@ -70,6 +71,26 @@
     </div>
   </mat-step>
   <mat-step>
+    <ng-template matStepLabel>Payement</ng-template>
+    <div class="payement-info">
+    * Tous nos tickets sont au prix de 1 ETH <br>
+    * cependant le prix peut varier en fonction des Cartes de réduction
+    </div>
+    <div class="payement-block">
+      Prix à payer {{price}} ETH
+      <div *ngIf="hasCard">
+
+        <button mat-raised-button color="primary" [disabled]="clicked" (click)="checkNftCard(''); clicked = true;"
+                style="float: right">Activer la réduction
+        </button>
+      </div>
+    </div>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext>Next</button>
+    </div>
+  </mat-step>
+  <mat-step>
     <ng-template matStepLabel>Recapitulatif de l'achat :
     </ng-template>
     <div class="stepper-3">
@@ -77,33 +98,39 @@
         <div class="cardWrap">
           <div class="card cardLeft">
             <h1>SupRailRoad & co </h1>
-            <div class="title">
-              <h2>Moyen de transport</h2>
-              <span>{{chosenTransport}}</span>
-            </div>
-            <div class="name">
-              <h2>Départ :</h2>
+            <div class="ticket-info">
+              <div class="title">
+                <h2>Transport</h2>
+                <span>{{chosenTransport}}</span>
+              </div>
+               <div class="name">
+              <h2>Départ </h2>
               <span>{{departure}}</span>
             </div>
             <div class="name">
-              <h2>Arrivé :</h2>
+              <h2>Arrivé </h2>
               <span>{{arrival}}</span>
             </div>
+            </div>
+            <div class="ticket-ino2">
             <div class="seat">
               <h2>156</h2>
               <span>Siége</span>
             </div>
             <div class="time">
-              <h2>{{travelTime}}</h2>
               <span>Heure de départ </span>
+              <h2>{{travelTime}}</h2>
             </div>
-
+              <div class="time">
+                <span>price </span>
+                <h2>{{price}} ETH</h2>
+              </div>
+          </div>
           </div>
           <div class="card cardRight">
             <div class="eye"></div>
             <div class="number">
               <h3>156</h3>
-              <span>Siége</span>
             </div>
             <div class="barcode"></div>
           </div>
@@ -122,3 +149,4 @@
     </div>
   </mat-step>
 </mat-vertical-stepper>
+</mat-card>

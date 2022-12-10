@@ -1,17 +1,20 @@
 <div class="row row-cols-1 row-cols-md-3 color-black content">
-  <div class="col mb-4" [routerLink]="['/card-list']">
-    <div class="card h-100">
-      <div class="card-body">
-        <h2 class="card-title">Cartes</h2>
+  <div class="card-block">
+    <div class="col mb-4 card-home" [routerLink]="['/card-list']">
+      <div class="card h-100">
+        <img src="/assets/card.png" alt="card">
       </div>
     </div>
+    <h1 class="title">Cartes</h1>
   </div>
 
-  <div class="col mb-4">
-    <div class="card h-100">
-      <div class="card-body">
-        <h2 class="card-title">Billets</h2>
+  <div class="ticket-block">
+    <div class="col mb-4 ticket-home" [routerLink]="['/buy-ticket']">
+      <div class="card h-100">
+        <img src="/assets/ticket.png" alt="ticket" class="">
       </div>
     </div>
+    <h1 class="title">Ticket</h1>
+
   </div>
 </div>

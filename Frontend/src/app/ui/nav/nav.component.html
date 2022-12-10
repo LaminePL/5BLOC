@@ -1,11 +1,12 @@
-<mat-sidenav-container >
-  <mat-sidenav  class="sidenav" fixedInViewport
+<mat-sidenav-container class="side-container" >
+  <mat-sidenav   class="sidenav" fixedInViewport
                role="navigation"
                mode="side"
-               opened="true">
-    <mat-toolbar>Menu</mat-toolbar>
+               opened="true"
+  style="background: floralwhite">
+    <img src="/assets/logo.png" alt="image" class="logo">
 
-    <mat-nav-list>
+    <mat-nav-list class="nav-list">
       <mat-list-item [routerLink]="['/home']">
         <mat-icon>home</mat-icon>
        Acceuil
@@ -13,6 +14,10 @@
       <mat-list-item [routerLink]="['/my-cards']">
         <mat-icon>money</mat-icon>
         Mes cartes
+      </mat-list-item>
+      <mat-list-item [routerLink]="['/ticket-list']">
+        <mat-icon>credit_card</mat-icon>
+        mes tickets
       </mat-list-item>
       <mat-list-item [routerLink]="['/create-card']" *ngIf="isAdmin">
         <mat-icon>sell</mat-icon>

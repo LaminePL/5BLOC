@@ -1,16 +1,18 @@
 import {Inject, Injectable} from '@angular/core';
-import { WEB3 } from '../../core/web3';
+import {WEB3} from '../../core/web3';
 //import contract from 'truffle-contract'; //acceso a libreria deprecada
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { BehaviorSubject, Subject } from 'rxjs';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {BehaviorSubject, Subject} from 'rxjs';
 
 import Web3 from 'web3';
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import { environment } from 'src/environments/environment';
+import {environment} from 'src/environments/environment';
 
 declare let require: any;
 const cardTokenAbi = require('../../../../../Blockchain/build/contracts/Card.json');
+const PurchaseAbi = require('../../../../../Blockchain/build/contracts/Purchase.json');
+
 const contract = require("@truffle/contract");
 
 
@@ -28,10 +30,10 @@ export class ContractService {
   balance;
 
   private _loading = new BehaviorSubject<boolean>(false);
-  public loading$ ;
+  public loading$;
 
 
-  constructor(@Inject(WEB3) private web3: Web3 ) {
+  constructor(@Inject(WEB3) private web3: Web3) {
     this.loading$ = this._loading.asObservable();
     const providerOptions = {
       walletconnect: {
@@ -64,44 +66,44 @@ export class ContractService {
     return this.accounts;
   }
 
-  async accountInfo(accounts){
+  async accountInfo(accounts) {
     const initialvalue = await this.web3js.eth.getBalance(accounts[0]);
-    this.balance = this.web3js.utils.fromWei(initialvalue , 'ether');
+    this.balance = this.web3js.utils.fromWei(initialvalue, 'ether');
     return this.balance;
   }
 
 
-  async accountIsAdmin(){
+  async accountIsAdmin() {
     await this.connectAccount();
     return this.accounts[0] == environment.admin_address;
   }
 
 
-  async createNFTCard(originAccount,metadataHash){
+  async createNFTCard(originAccount, metadataHash) {
     await this.connectAccount();
     return new Promise((resolve, reject) => {
-    const tokenURI = `${environment.pinata_gateway_url}/${metadataHash}`;
-    const cardContract = contract(cardTokenAbi);
-    cardContract.setProvider(this.provider);
-    cardContract.deployed().then((instance) => {
-      return instance.mintCard(
-        originAccount,
-        tokenURI,
-        {from: originAccount, value: Web3.utils.toWei('0.2', 'ether'),  gas:1000000}
+      const tokenURI = `${environment.pinata_gateway_url}/${metadataHash}`;
+      const cardContract = contract(cardTokenAbi);
+      cardContract.setProvider(this.provider);
+      cardContract.deployed().then((instance) => {
+        return instance.mintCard(
+          originAccount,
+          tokenURI,
+          {from: originAccount, value: Web3.utils.toWei('0.2', 'ether'), gas: 1000000}
         );
-    }).then((status) => {
-      if (status) {
-        return resolve(status);
-      }
-    }).catch((error) => {
-      console.log(error);
-      return reject('Error creating card nft');
+      }).then((status) => {
+        if (status) {
+          return resolve(status);
+        }
+      }).catch((error) => {
+        console.log(error);
+        return reject('Error creating card nft');
+      });
     });
-  });
 
   }
 
-  async getAccountCards(originAccount){
+  async getAccountCards(originAccount) {
     await this.connectAccount();
     return new Promise((resolve, reject) => {
       const cardContract = contract(cardTokenAbi);
@@ -110,7 +112,7 @@ export class ContractService {
         return instance.getCardsByOwner(
           originAccount,
           {from: originAccount}
-          );
+        );
       }).then((result) => {
         if (result) {
           return resolve(result);
@@ -123,7 +125,7 @@ export class ContractService {
   }
 
 
-  async buyNFTCard(tokenId, price){
+  async buyNFTCard(tokenId, price) {
     await this.connectAccount();
     return new Promise((resolve, reject) => {
       const cardContract = contract(cardTokenAbi);
@@ -132,8 +134,8 @@ export class ContractService {
         return instance.buyCard(
           this.accounts[0],
           tokenId,
-          {from: this.accounts[0], value: Web3.utils.toWei(String(price), 'ether'),  gas:1000000}
-          );
+          {from: this.accounts[0], value: Web3.utils.toWei(String(price), 'ether'), gas: 1000000}
+        );
       }).then((status) => {
         if (status) {
           return resolve(status);
@@ -145,7 +147,7 @@ export class ContractService {
     });
   }
 
-  async sendNFTCard(to,tokenId,price){
+  async sendNFTCard(to, tokenId, price) {
     await this.connectAccount();
     return new Promise((resolve, reject) => {
       const cardContract = contract(cardTokenAbi);
@@ -154,8 +156,8 @@ export class ContractService {
         return instance.sendCard(
           to,
           tokenId,
-          {from: this.accounts[0], value: Web3.utils.toWei(String(price), 'ether'),  gas:1000000}
-          );
+          {from: this.accounts[0], value: Web3.utils.toWei(String(price), 'ether'), gas: 1000000}
+        );
       }).then((status) => {
         if (status) {
           return resolve(status);
@@ -167,7 +169,75 @@ export class ContractService {
     });
   }
 
+  /**
+   * ticket service part
+   */
+
+  showTickets(address) {
+    return new Promise((resolve, reject) => {
+      var contract = require("@truffle/contract");
+      const paymentContract = contract(PurchaseAbi);
+      paymentContract.setProvider(this.provider);
+      paymentContract.deployed().then((instance) => {
+        return instance.showTicket(address, {from: address});
+      }).then((status) => {
+        if (status) {
+          return resolve(status);
+        }
+      }).catch((error) => {
+        console.log(error);
+
+        return reject('Error transfering Ether');
+      });
+    });
+  }
+
+  buyTicket(departure, arrival, travelTime, name, price) {
+    return new Promise((resolve, reject) => {
+      var contract = require("@truffle/contract");
+      const paymentContract = contract(PurchaseAbi);
+      paymentContract.setProvider(this.provider);
+      paymentContract.deployed().then((instance) => {
+        return instance.buyTickets(this.accounts[0], departure, arrival, travelTime, name, price, {
+            from: this.accounts[0],
+            value: this.web3.utils.toWei(price, 'ether')
+          , gas: 1000000
+          }
+        );
+      }).then((status) => {
+        if (status) {
+          return resolve({status: true});
+        }
+      }).catch((error) => {
+        console.log(error);
+        return reject("Erreur lors du transfert d' Ether");
+      });
+    });
+  }
 
 
+  async CardsByOwner(originAccount) {
+    console.log(originAccount)
+    await this.connectAccount();
+    return new Promise((resolve, reject) => {
+      var contract = require("@truffle/contract");
+      const cardContract = contract(cardTokenAbi);
+      cardContract.setProvider(this.provider);
+      cardContract.deployed().then((instance) => {
+        return instance.getCardsByOwner(
+          this.accounts[0],
+          {from: this.accounts[0]}
+        );
+      }).then((result) => {
+        if (result) {
+          return resolve(result);
+        }
+      }).catch((error) => {
+        console.log(error);
+        return reject('Error getting cards');
+      });
+    });
+
+  }
 }
 

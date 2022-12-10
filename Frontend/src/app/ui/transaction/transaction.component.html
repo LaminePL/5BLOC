@@ -3,58 +3,65 @@
 
   <div class="transport-list">
 
-    <div class="item" *ngFor="let transaction of transactionHistory">
-      <div class="item-right">
-        <div class="img-transport" *ngIf="transaction?.name == 'Train'">
-          <mat-icon> train</mat-icon>
-        </div>
+    <mat-card class="item" *ngFor="let transaction of transactionHistory">
 
-        <div class="img-transport" *ngIf="transaction?.name == 'Bus'">
-          <mat-icon> directions_bus</mat-icon>
-        </div>
-
-        <div class="img-transport" *ngIf="transaction?.name == 'Metro'">
-          <mat-icon> tram</mat-icon>
-        </div>
-
-        <span class="up-border"></span>
-        <span class="down-border"></span>
-      </div> <!-- end item-right -->
-
-      <div class="item-left">
-        <p class="event">SupRailRoad & co. </p>
-        <h2 class="title">Ticket de {{transaction?.name}}</h2>
-
-        <div class="sce">
-          <div class="icon">
-            <mat-icon> departure_board</mat-icon>
+        <div class="item-right">
+          <div class="img-transport" *ngIf="transaction?.name == 'Train'">
+            <mat-icon> train</mat-icon>
           </div>
-          <p>Départ le : {{transaction?.travelTime}} de {{transaction?.departure}} à {{transaction?.arrival}}  </p>
-        </div>
 
-        <div class="fix"></div>
-        <div class="loc">
-          <div class="icon">
-            <mat-icon>airline_seat_recline_extra</mat-icon>
+          <div class="img-transport" *ngIf="transaction?.name == 'Bus'">
+            <mat-icon> directions_bus</mat-icon>
           </div>
-          <p>Numéro de Siége : 156</p>
-        </div>
 
-        <div class="fix"></div>
-        <div class="loc">
-          <div class="icon">
-            <mat-icon>query_builder</mat-icon>
+          <div class="img-transport" *ngIf="transaction?.name == 'Metro'">
+            <mat-icon> tram</mat-icon>
           </div>
-          <p *ngIf="transaction?.name == 'Bus'">Durée du voyage : 2:45</p>
-          <p *ngIf="transaction?.name == 'Train'">Durée du voyage : 00:45</p>
-          <p *ngIf="transaction?.name == 'Metro'">Durée du voyage : 1:45</p>
-        </div>
 
-        <div class="fix  "></div>
-        <img src="/assets/code-barre.png" alt="image" class="barcode">
+          <span class="up-border"></span>
+          <span class="down-border"></span>
+        </div> <!-- end item-right -->
 
-      </div> <!-- end item-right -->
-    </div> <!-- end item -->
+        <div class="item-left">
+          <p class="event">SupRailRoad & co. </p>
+          <h2 class="title">Ticket de {{transaction?.name}}</h2>
+
+          <div class="sce">
+            <div class="icon">
+              <mat-icon> departure_board</mat-icon>
+            </div>
+            <p>Départ le : {{transaction?.travelTime}} de {{transaction?.departure}} à {{transaction?.arrival}}  </p>
+          </div>
+
+          <div class="fix"></div>
+          <div class="loc">
+            <div class="icon">
+              <mat-icon>airline_seat_recline_extra</mat-icon>
+            </div>
+            <p>Numéro de Siége : 156</p>
+          </div>
+
+          <div class="fix"></div>
+          <div class="loc">
+            <div class="icon">
+              <mat-icon>query_builder</mat-icon>
+            </div>
+            <p *ngIf="transaction?.name == 'Bus'">Durée du voyage : 2:45</p>
+            <p *ngIf="transaction?.name == 'Train'">Durée du voyage : 00:45</p>
+            <p *ngIf="transaction?.name == 'Metro'">Durée du voyage : 1:45</p>
+          </div>
+          <div class="fix"></div>
+          <div class="loc">
+            <div class="icon">
+              <mat-icon> money</mat-icon>
+            </div>
+            <p>prix: {{transaction?.price}} ETH</p>
+          </div>
+          <div class="fix  "></div>
+          <img src="/assets/code-barre.png" alt="image" class="barcode">
+
+        </div> <!-- end item-right -->
+    </mat-card> <!-- end item -->
   </div>
 
 </div>

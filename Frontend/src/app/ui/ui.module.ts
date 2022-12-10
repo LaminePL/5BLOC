@@ -7,6 +7,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AccountComponent } from './account/account.component';
 import { NavComponent } from './nav/nav.component';
 import { ErrorComponent } from './error/error.component';
+import { PurchaseComponent } from './purchase/purchase.component';
+import { FormsModule } from '@angular/forms';
+import {TransactionComponent} from './transaction/transaction.component'
 
 
 // Routing
@@ -22,6 +25,9 @@ import { HomeComponent } from './home/home.component';
 import { AppMaterialModule } from '../app-material.module';
 import { MyCardsComponent } from './my-cards/my-cards.component';
 import { SendCardModalComponent } from './send-card-modal/send-card-modal.component';
+import {MatRadioModule} from "@angular/material/radio";
+import {MatOptionModule} from "@angular/material/core";
+import {MatSelectModule} from "@angular/material/select";
 
 
 
@@ -35,14 +41,21 @@ import { SendCardModalComponent } from './send-card-modal/send-card-modal.compon
     CardListComponent,
     HomeComponent,
     MyCardsComponent,
-    SendCardModalComponent
+    SendCardModalComponent,
+    PurchaseComponent,
+    TransactionComponent
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(UiRoute),
     ReactiveFormsModule,
     AppMaterialModule,
-    MatInputModule
+    MatInputModule,
+    FormsModule,
+    MatRadioModule,
+    MatOptionModule,
+    MatSelectModule
+
 
   ],
   exports: [

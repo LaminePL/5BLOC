@@ -1,5 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { ContractService } from "src/app/services/contract/contract.service";
+import {LoaderService} from "../../services/loader/loader.service";
+import {MatDialog} from "@angular/material/dialog";
+import {NotificationService} from "../../services/notification/notification.service";
 
 @Component({
   selector: "app-transaction",
@@ -12,7 +15,10 @@ export class TransactionComponent implements OnInit {
   direction: any;
   transactionHistory: any;
 
-  constructor(private contract: ContractService) {
+  constructor(private contract: ContractService,
+              public loader: LoaderService,
+              public dialog: MatDialog,
+              private notifacationService: NotificationService) {
     contract.connectAccount()
     .then((value: any) => {
 
@@ -21,9 +27,8 @@ export class TransactionComponent implements OnInit {
     })
     .catch((error: any) => {
       console.log(error);
-      contract.failure(
-        "Could't get the account data, please check if metamask is running correctly and refresh the page"
-      );
+      this.notifacationService.error("Impossible de récuperer les informations du compte");
+
     });
 
   }
@@ -35,12 +40,9 @@ export class TransactionComponent implements OnInit {
       .showTickets(address)
       .then((r) => {
         this.transactionHistory = r
-        console.log(this.transactionHistory)
-
-        this.contract.success();
       })
       .catch((e) => {
-        this.contract.failure("Transaction failed");
+        this.notifacationService.error("Impossible d'afficher les tickets'");
       });
   }
 
