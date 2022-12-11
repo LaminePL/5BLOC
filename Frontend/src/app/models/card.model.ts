@@ -10,4 +10,6 @@ export interface Card{
 export interface CardNFT{
   id:string;
   card:Card;
+  inMarket:boolean;
+  isOwner: boolean;
 }

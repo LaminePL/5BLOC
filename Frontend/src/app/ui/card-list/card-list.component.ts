@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Card, CardNFT } from 'src/app/models/card.model';
-import { NFTResponse } from 'src/app/models/nFTResponse.model';
+import { CardNFTResponse } from 'src/app/models/cardNFTResponse.model';
 import { ContractService } from 'src/app/services/contract/contract.service';
 import { LoaderService } from 'src/app/services/loader/loader.service';
 import { NotificationService } from 'src/app/services/notification/notification.service';
@@ -17,67 +17,43 @@ import { SendCardModalComponent } from '../send-card-modal/send-card-modal.compo
 export class CardListComponent implements OnInit {
 
   @Input() address: string;
-  cards: CardNFT[] = [];
-  isAdmin:boolean;
+  displayedCards: CardNFT[] = [];
+  isAdmin: boolean;
   constructor(private contract: ContractService,
-     private pinataService: PinataService,
-     public loader: LoaderService,
-     private notifacationService : NotificationService,
-     public dialog: MatDialog) { }
+    private pinataService: PinataService,
+    public loader: LoaderService,
+    private notifacationService: NotificationService,
+    public dialog: MatDialog) { }
 
-   ngOnInit() {
-    this.loader.show();
-    this.contract.accountIsAdmin().then(isAdmin =>{
-      this.isAdmin = isAdmin;
-    })
-    let currentAdress = !!this.address ? this.address : environment.admin_address;
-    this.contract.getAccountCards(currentAdress).then((nfts: NFTResponse[]) => {
-      nfts.forEach(nft => {
-        this.pinataService.getCard(nft.uri).subscribe({
-
-          next: card => {
-            this.cards.push({
-              id: nft.id,
-              card: card
-            });
-          }, error: err => {
-            this.loader.hide();
-            this.notifacationService.error("Error while fetching card from Pinata");
-          }
-        })
-      });
-      this.loader.hide();
-    })
-      .catch(err => {
-        this.loader.hide();
-        this.notifacationService.error("Error while getting NFT cards");
-      });
-
+  async ngOnInit() {
+    this.loadCards();
   }
 
-  buyCard(id, price) {
-    this.loader.show();
-    this.contract.buyNFTCard(id, price).then(test => {
+  async buyCard(id, price) {
+    try {
+
+      this.loader.show();
+      await this.contract.buyNFTCard(id, price)
       this.loader.hide();
       this.notifacationService.success("Card NFT buyed succefuly");
-      this.ngOnInit();
-    }).catch(err => {
+      await this.loadCards();
+
+    } catch (err) {
       this.loader.hide();
       this.notifacationService.error("Error while transfering NFT cards");
-    });
+    };
   }
 
 
-  sendCard(id) {
+  async sendCard(id) {
     const dialogRef = this.dialog.open(SendCardModalComponent);
-    dialogRef.afterClosed().subscribe( res => {
-      if(res){
-        console.log(res)
+    dialogRef.afterClosed().subscribe(res => {
+      if (res) {
         this.loader.show();
-        this.contract.sendNFTCard(res.to,id,res.price).then(test => {
+        this.contract.sendCard(res.to, id).then(async test => {
           this.loader.hide();
           this.notifacationService.success("Card NFT sended succefuly");
-          this.ngOnInit();
+          await this.loadCards();
         }).catch(err => {
           this.loader.hide();
           this.notifacationService.error("Error while sending NFT card");
@@ -85,6 +61,73 @@ export class CardListComponent implements OnInit {
       }
     })
 
+  }
+
+  async saleCard(id) {
+
+    try {
+      this.loader.show();
+      await this.contract.saleCard(id);
+      this.notifacationService.success("Card added to market");
+      await this.loadCards();
+      this.loader.hide();
+    } catch (err) {
+      this.loader.hide();
+      this.notifacationService.error("Error while solding card");
+    }
+
+  }
+
+  async stopSallingCard(id) {
+
+    try {
+      this.loader.show();
+      await this.contract.stopSallingCard(id);
+      this.notifacationService.success("Card removed from market");
+      await this.loadCards();
+      await this.loader.hide();
+    } catch (err) {
+      this.loader.hide();
+      this.notifacationService.error("Error while soldinf card");
+    }
+
+  }
+
+  async loadCards() {
+    try {
+      this.displayedCards= [];
+      this.loader.show();
+      this.isAdmin = await this.contract.accountIsAdmin();
+      let currentAddress = this.contract.accounts[0];
+      let nfts: CardNFTResponse[] = [];
+      if (!!this.address)
+        nfts = await this.contract.getAccountCards(this.address);
+      else
+        nfts = await this.contract.getMarketCards();
+      nfts.forEach(nft => {
+
+        this.pinataService.getCard(nft.uri).subscribe({
+
+          next: card => {
+            this.displayedCards.push({
+              id: nft.id,
+              card: card,
+              inMarket: nft.inMarket,
+              isOwner:  nft.owner == currentAddress
+            });
+          }, error: err => {
+            this.loader.hide();
+            this.notifacationService.error("Error while fetching card from Pinata");
+          }
+        })
+      });
+
+      this.loader.hide();
+
+    } catch (err) {
+      this.loader.hide();
+      this.notifacationService.error("Error while getting NFT cards");
+    }
   }
 
 }

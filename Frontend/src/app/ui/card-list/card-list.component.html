@@ -1,9 +1,9 @@
 <div class="container p-2 card-list">
 
-<div *ngIf="cards.length == 0" class="text-center m-3 text-dark"> <strong> No card found </strong></div>
+<div *ngIf="displayedCards.length == 0" class="text-center m-3 text-dark"> <strong> No card found </strong></div>
 
-<div class="row row-cols-1 row-cols-md-3 color-black" *ngIf="cards.length > 0">
-    <div class="col mb-4" *ngFor="let cardNFT of cards">
+<div class="row row-cols-1 row-cols-md-3 color-black" *ngIf="displayedCards.length > 0">
+    <div class="col mb-4" *ngFor="let cardNFT of displayedCards">
     <div class="card h-100" >
         <img  [src]="cardNFT.card.image_url" alt="card image" class="card-img-top h-50" alt="Fissure in Sandstone"/>
         <div class="card-body">
@@ -15,11 +15,18 @@
           <p class="card-text max-lines-3">{{cardNFT.card.description}}</p>
 
 
-          <div class="button-container" >
-            <span *ngIf="!address && isAdmin"><strong>(Admin ne peut pas acheter ses cartes)</strong></span>
-            <button mat-raised-button color="accent" (click)="buyCard(cardNFT.id, cardNFT.card.price)" *ngIf="!address && !isAdmin">Acheter</button>
-            <button mat-raised-button color="accent" (click)="sendCard(cardNFT.id)" *ngIf="!!address">Envoyer</button>
-            &nbsp;
+          <div class="buttons-container" >
+            <span *ngIf="isAdmin"><strong>(Admin ne peut pas acheter/vendre des cartes)</strong></span>
+            <span *ngIf="!address && cardNFT.isOwner && !isAdmin"><strong>(Vous ne pouvez pas acheter votre carte)</strong></span>
+            <button mat-raised-button color="accent" (click)="buyCard(cardNFT.id, cardNFT.card.price)" *ngIf="!address && !cardNFT.isOwner && !isAdmin">Acheter</button>
+            <button mat-raised-button color="accent" (click)="sendCard(cardNFT.id)" *ngIf="!!address && !isAdmin" class="me-2">Envoyer</button>
+            <button mat-mini-fab  color="primary" (click)="saleCard(cardNFT.id)" *ngIf="!!address && !cardNFT.inMarket && !isAdmin">
+              <mat-icon>shopping_cart</mat-icon>
+            </button>
+            <button mat-mini-fab  color="warn" (click)="stopSallingCard(cardNFT.id)" *ngIf="!!address && cardNFT.inMarket && !isAdmin">
+              <mat-icon>remove_shopping_cart</mat-icon>
+            </button>
+         
         </div>
         </div>
       </div>

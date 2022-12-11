@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import {LoaderService} from "../../services/loader/loader.service";
 import {MatDialog} from "@angular/material/dialog";
 import {NotificationService} from "../../services/notification/notification.service";
-import {NFTResponse} from "../../models/nFTResponse.model";
+import {CardNFTResponse} from "../../models/cardNFTResponse.model";
 import {PinataService} from "../../services/pinata/pinata.service";
 import {Card, CardNFT} from "../../models/card.model";
 import {from} from 'rxjs';
@@ -74,7 +74,7 @@ export class PurchaseComponent implements OnInit {
     this.contract
       .buyTicket(this.departure, this.arrival, travelDayAndTime, this.chosenTransport, this.price.toString())
       .then((r) => {
-        this.notifacationService.success("Votre ticket est deja disponible dans votre respace transaction");
+        this.notifacationService.success("Votre ticket est deja disponible dans votre espace transaction");
       })
       .catch((e) => {
         this.loader.hide();
@@ -90,7 +90,7 @@ export class PurchaseComponent implements OnInit {
       .then((accounts: any) => {
         currentAddress = accounts[0];
       })
-    this.contract.CardsByOwner(currentAddress).then((nfts: NFTResponse[]) => {
+    this.contract.CardsByOwner(currentAddress).then((nfts: CardNFTResponse[]) => {
       nfts.forEach(nft => {
         this.pinataService.getCard(nft.uri).subscribe((res) => {
           if (res) {
@@ -103,9 +103,18 @@ export class PurchaseComponent implements OnInit {
   }
 
   checkNftCard(currentAddress) {
+<<<<<<< HEAD
     this.contract.connectAccount().then((accounts: any) => {
         currentAddress = accounts[0]; })
     this.contract.CardsByOwner(currentAddress).then((nfts: NFTResponse[]) => {
+=======
+    this.contract
+      .connectAccount()
+      .then((accounts: any) => {
+        currentAddress = accounts[0];
+      })
+    this.contract.CardsByOwner(currentAddress).then((nfts: CardNFTResponse[]) => {
+>>>>>>> colab-code
       nfts.forEach(nft => {
         this.pinataService.getCard(nft.uri).subscribe((res) => {
           if (res) {
@@ -114,7 +123,11 @@ export class PurchaseComponent implements OnInit {
               return Math.max(a, b);
             });
             Swal.fire({
+<<<<<<< HEAD
               title: 'Vous avez une réduction de ' + max + "%  voulez vous l'activer",
+=======
+              title: 'Vous avez une réduction de ' + max + '%',
+>>>>>>> colab-code
               icon: 'question',
               confirmButtonText: 'Oui',
               cancelButtonText: 'Non',

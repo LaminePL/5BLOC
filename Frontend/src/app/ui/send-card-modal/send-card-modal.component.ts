@@ -15,16 +15,14 @@ export class SendCardModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = new FormGroup({
-      address: new FormControl("", [Validators.required]),
-      price: new FormControl("0", [Validators.required]),
+      address: new FormControl("", [Validators.required])
     })
   }
 
   validate(e){
     if(this.form.valid){
       this.dialogRef.close({
-        to:this.form.controls["address"].value,
-        price:this.form.controls["price"].value
+        to:this.form.controls["address"].value
       })
     }
   }

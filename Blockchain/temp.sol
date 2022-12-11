@@ -1,3 +1,5 @@
+//Contract based on [https://docs.openzeppelin.com/contracts/4.x/erc721](https://docs.openzeppelin.com/contracts/4.x/erc721)
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -9,20 +11,19 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract Card is ERC721URIStorage, Ownable,ERC721Holder  {
 
     // Structs 
-    struct cardResponse {
+    struct CardResponse {
             string uri;
             uint256 id;
-            bool inMarket;
-            address owner;
         }
-
+    struct CardItem {
+            bool sellable;
+            uint256 id;
+        }
     
     // props 
     uint private fees = 0.01 ether;
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
-
-    uint256[] private market;
             
     // modifiers 
     modifier onlyOwnerOf(uint _cardId) {
@@ -34,18 +35,18 @@ contract Card is ERC721URIStorage, Ownable,ERC721Holder  {
     event NftBought(address _seller, address _buyer, uint256 _price);
 
     //mappings
-    mapping(address => uint256[]) public userOwnedCards;
+    mapping(address => CardItem[]) userOwnedCards;
 
-    constructor() ERC721("Card NFT", "NFT") {
+    //storage
 
-    }
+    constructor() ERC721("Card NFT", "NFT") {}
 
     // private functions
     function _removeCardFromOwner(address _owner,uint256 _cardId) private 
     {
         uint ownedCardsCount = userOwnedCards[_owner].length;
         for (uint i = 0; i < ownedCardsCount; i++) {
-            if(userOwnedCards[_owner][i] == _cardId){
+            if(userOwnedCards[_owner][i].id == _cardId){
                 userOwnedCards[_owner][i] = userOwnedCards[_owner][ownedCardsCount-1];
                 userOwnedCards[_owner].pop();
                 break;
@@ -55,7 +56,11 @@ contract Card is ERC721URIStorage, Ownable,ERC721Holder  {
 
     function _transferCard(address _from, address _to, uint256 _cardId) private {
         _removeCardFromOwner(_from,_cardId);
-        userOwnedCards[_to].push(_cardId);
+        CardItem memory c = CardItem({
+            id : _cardId,
+            sellable : false
+        });
+        userOwnedCards[_to].push(c);
         IERC721 nft = IERC721(address(this));
         nft.transferFrom(_from, _to, _cardId);
     }
@@ -65,36 +70,13 @@ contract Card is ERC721URIStorage, Ownable,ERC721Holder  {
         if(_isOwner){
             uint ownedCardsCount = userOwnedCards[_owner].length;
             for(uint i = 0; i < ownedCardsCount; i++){
-                if(userOwnedCards[_owner][i] == _cardId){
+                if(userOwnedCards[_owner][i].id == _cardId){
                     return true;
                 }
             }
         }
         return false;
 
-    }
-
-    function _isInMarket(uint256 _cardId) private returns(bool){
-        uint cardsCount = market.length;
-        for (uint i = 0; i < cardsCount; i++) {
-            if(market[i] == _cardId){
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    function _removeCardFromMarket(uint256 _cardId) private 
-    {
-        uint cardsCount = market.length;
-        for (uint i = 0; i < cardsCount; i++) {
-            if(market[i] == _cardId){
-                market[i] = market[cardsCount-1];
-                market.pop();
-                break;
-            }
-        }
     }
     
     
@@ -109,39 +91,39 @@ contract Card is ERC721URIStorage, Ownable,ERC721Holder  {
         _safeMint(recipient, cardId);
         _setTokenURI(cardId, cardURI);
         approve(address(this),cardId);
-        userOwnedCards[recipient].push(cardId);
-        market.push(cardId);
+        CardItem memory c = CardItem({
+            id : cardId,
+            sellable : false
+        });
+
+        userOwnedCards[recipient].push(c);
     }
 
-    function getCardsByOwner(address owner) public view returns (cardResponse[] memory)  {
+    function getCardsByOwner(address owner) public view returns (CardResponse[] memory)  {
         uint ownedCardsCount = userOwnedCards[owner].length;
-        cardResponse[] memory result = new cardResponse[](ownedCardsCount);
-        uint cardsCount = market.length;
+        CardResponse[] memory result = new CardResponse[](ownedCardsCount);
+
         for (uint i = 0; i < ownedCardsCount; i++) {
-            uint256 cardId = userOwnedCards[owner][i];
-            result[i].uri = tokenURI(cardId);
-            result[i].id = cardId ;
-            result[i].inMarket = false;
-            result[i].owner = ownerOf(cardId);
-            for (uint j = 0; j < cardsCount; j++) {
-                if(market[j] == cardId){
-                    result[i].inMarket = true;
-                    break;
-                }
-            }
+            result[i].uri = tokenURI(userOwnedCards[owner][i].id);
+            result[i].id =  userOwnedCards[owner][i].id;
         }
         return result;
     }
 
-    function getMarketCards() public view returns (cardResponse[] memory)  {
-        uint cardsCount = market.length;
-        cardResponse[] memory result = new cardResponse[](cardsCount);
+    function getMarketCards() public view returns (CardResponse[] memory)  {
+        uint ownersCount = userOwnedCards.length;
+        CardResponse[] memory result = new CardResponse[]();
 
-        for (uint i = 0; i < cardsCount; i++) {
-            result[i].uri = tokenURI(market[i]);
-            result[i].id =  market[i];
-            result[i].inMarket  = true;
-            result[i].owner = ownerOf(market[i]);
+        for (uint i = 0; i < ownersCount; i++) {
+            uint ownedCardsCount = userOwnedCards[i].length;
+            for (uint j = 0; j < ownedCardsCount; j++) {
+                if(userOwnedCards[i][j].sellable == true){
+                    CardResponse memory cr = new CardResponse();
+                    cr.uri = tokenURI(userOwnedCards[i][j].id);
+                    cr.id =  userOwnedCards[i][j].id;
+                    result.push(cr);
+                    }
+            }
         }
         return result;
     }
@@ -155,29 +137,31 @@ contract Card is ERC721URIStorage, Ownable,ERC721Holder  {
        require(_buyer != _seller,'Can not buy owned card');
         _transferCard(_seller, payable(_buyer), _cardId);
        payable(_seller).transfer(msg.value);
-       _removeCardFromMarket(_cardId);
         emit NftBought(_seller, _buyer, msg.value);
     }
 
     function sendCard(address _to,uint256 _cardId) public payable onlyOwnerOf(_cardId) {
+        require(_to.balance >= msg.value, 'Solde insuffisant');
         address _seller = ownerOf(_cardId);
         require(_to != _seller,'Can not send to self');
 
         approve(address(this),_cardId);
         _transferCard(_seller, payable(_to), _cardId);
-
+        if(msg.value > 0)
+            payable(_seller).transfer(msg.value);
         emit NftBought(_seller, _to, msg.value);
     }
 
-    function saleCard(uint256 _cardId) public  onlyOwnerOf(_cardId){
-        require(_isInMarket(_cardId) == false,'Card already in market');
-        market.push(_cardId);
-        approve(address(this),_cardId);
-    }
+    function soldCard(address _owner,uint256 _cardId) public  onlyOwnerOf(_cardId) {
 
-    function stopSallingCard(uint256 _cardId) public onlyOwnerOf(_cardId){
-        require(_isInMarket(_cardId) == true,'Card not in market');
-        _removeCardFromMarket(_cardId);
+         uint ownedCardsCount = userOwnedCards[_owner].length;
+        for (uint i = 0; i < ownedCardsCount; i++) {
+            if(userOwnedCards[_owner][i].id == _cardId){
+                userOwnedCards[_owner][i].sellable = true;
+                break;
+            }
+        }
+
     }
 
 

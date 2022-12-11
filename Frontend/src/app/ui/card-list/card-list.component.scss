@@ -1,5 +1,5 @@
 .card {
-    max-width: 250px;
+    width: 200px;
   }
 
   .color-black{
@@ -14,3 +14,12 @@
     -webkit-box-orient: vertical;
   }
 
+  .card-list{
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .buttons-container{
+    display: flex;
+    justify-content: space-between;
+  }

@@ -8,6 +8,7 @@ import Web3 from 'web3';
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import {environment} from 'src/environments/environment';
+import { CardNFTResponse } from 'src/app/models/cardNFTResponse.model';
 
 declare let require: any;
 const cardTokenAbi = require('../../../../../Blockchain/build/contracts/Card.json');
@@ -103,7 +104,7 @@ export class ContractService {
 
   }
 
-  async getAccountCards(originAccount) {
+  async getAccountCards(originAccount) : Promise<CardNFTResponse[]> {
     await this.connectAccount();
     return new Promise((resolve, reject) => {
       const cardContract = contract(cardTokenAbi);
@@ -119,7 +120,7 @@ export class ContractService {
         }
       }).catch((error) => {
         console.log(error);
-        return reject('Error getting cards');
+        return reject('Error getting account cards');
       });
     });
   }
@@ -147,7 +148,7 @@ export class ContractService {
     });
   }
 
-  async sendNFTCard(to, tokenId, price) {
+  async sendCard(to, tokenId) {
     await this.connectAccount();
     return new Promise((resolve, reject) => {
       const cardContract = contract(cardTokenAbi);
@@ -156,7 +157,7 @@ export class ContractService {
         return instance.sendCard(
           to,
           tokenId,
-          {from: this.accounts[0], value: Web3.utils.toWei(String(price), 'ether'), gas: 1000000}
+          {from: this.accounts[0], gas: 1000000}
         );
       }).then((status) => {
         if (status) {
@@ -165,6 +166,70 @@ export class ContractService {
       }).catch((error) => {
         console.log(error);
         return reject('Error buying card');
+      });
+    });
+  }
+
+
+  async getMarketCards(): Promise<CardNFTResponse[]>{
+    await this.connectAccount();
+    return new Promise((resolve, reject) => {
+      const cardContract = contract(cardTokenAbi);
+      cardContract.setProvider(this.provider);
+      cardContract.deployed().then((instance) => {
+        return instance.getMarketCards(
+          {from: this.accounts[0]}
+        );
+      }).then((result) => {
+        if (result) {
+          return resolve(result);
+        }
+      }).catch((error) => {
+        console.log(error);
+        return reject('Error getting cards');
+      });
+    });
+
+  }
+
+  async saleCard(tokenId) {
+    await this.connectAccount();
+    return new Promise((resolve, reject) => {
+      const cardContract = contract(cardTokenAbi);
+      cardContract.setProvider(this.provider);
+      cardContract.deployed().then((instance) => {
+        return instance.saleCard(
+          tokenId,
+          {from: this.accounts[0]}
+        );
+      }).then((status) => {
+        if (status) {
+          return resolve(status);
+        }
+      }).catch((error) => {
+        console.log(error);
+        return reject('Error solding card');
+      });
+    });
+  }
+
+  async stopSallingCard(tokenId) {
+    await this.connectAccount();
+    return new Promise((resolve, reject) => {
+      const cardContract = contract(cardTokenAbi);
+      cardContract.setProvider(this.provider);
+      cardContract.deployed().then((instance) => {
+        return instance.stopSallingCard(
+          tokenId,
+          {from: this.accounts[0]}
+        );
+      }).then((status) => {
+        if (status) {
+          return resolve(status);
+        }
+      }).catch((error) => {
+        console.log(error);
+        return reject('Error solding card');
       });
     });
   }

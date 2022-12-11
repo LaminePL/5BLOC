@@ -402,13 +402,13 @@
     "absolutePath": "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
     "exportedSymbols": {
       "Address": [
-        2058
+        2085
       ],
       "Context": [
-        2080
+        2107
       ],
       "ERC165": [
-        2353
+        2380
       ],
       "ERC721": [
         1057
@@ -417,7 +417,7 @@
         1545
       ],
       "IERC165": [
-        2365
+        2392
       ],
       "IERC721": [
         1173
@@ -432,10 +432,10 @@
         1191
       ],
       "Math": [
-        3230
+        3257
       ],
       "Strings": [
-        2329
+        2356
       ]
     },
     "id": 1546,
@@ -521,9 +521,9 @@
           1057,
           1728,
           1173,
-          2353,
-          2365,
-          2080
+          2380,
+          2392,
+          2107
         ],
         "name": "ERC721Enumerable",
         "nameLocation": "430:16:4",
@@ -725,7 +725,7 @@
           {
             "baseFunctions": [
               206,
-              2364
+              2391
             ],
             "body": {
               "id": 1240,
@@ -935,7 +935,7 @@
                   "id": 1222,
                   "name": "IERC165",
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 2365,
+                  "referencedDeclaration": 2392,
                   "src": "1081:7:4"
                 },
                 {
@@ -4670,7 +4670,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.11",
-  "updatedAt": "2022-12-04T12:31:53.032Z",
+  "updatedAt": "2022-12-10T22:04:16.387Z",
   "devdoc": {
     "details": "This implements an optional extension of {ERC721} defined in the EIP that adds enumerability of all the token ids in the contract as well as all token ids owned by each account.",
     "kind": "dev",
