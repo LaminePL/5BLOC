@@ -3,6 +3,7 @@ import { ContractService } from "src/app/services/contract/contract.service";
 import {LoaderService} from "../../services/loader/loader.service";
 import {MatDialog} from "@angular/material/dialog";
 import {NotificationService} from "../../services/notification/notification.service";
+import Web3 from "web3";
 
 @Component({
   selector: "app-transaction",
@@ -39,12 +40,21 @@ export class TransactionComponent implements OnInit {
     this.contract
       .showTickets(address)
       .then((r) => {
-        this.transactionHistory = r
+        this.transactionHistory = r;
+
+
       })
       .catch((e) => {
         this.notifacationService.error("Impossible d'afficher les tickets'");
       });
   }
 
+  toEther(price){
+    return price/(10**18);
+
+  }
+
 
 }
+
+

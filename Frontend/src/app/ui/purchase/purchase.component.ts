@@ -103,11 +103,8 @@ export class PurchaseComponent implements OnInit {
   }
 
   checkNftCard(currentAddress) {
-    this.contract
-      .connectAccount()
-      .then((accounts: any) => {
-        currentAddress = accounts[0];
-      })
+    this.contract.connectAccount().then((accounts: any) => {
+        currentAddress = accounts[0]; })
     this.contract.CardsByOwner(currentAddress).then((nfts: NFTResponse[]) => {
       nfts.forEach(nft => {
         this.pinataService.getCard(nft.uri).subscribe((res) => {
@@ -117,7 +114,7 @@ export class PurchaseComponent implements OnInit {
               return Math.max(a, b);
             });
             Swal.fire({
-              title: 'Vous acez une réduction de ' + max + '%',
+              title: 'Vous avez une réduction de ' + max + "%  voulez vous l'activer",
               icon: 'question',
               confirmButtonText: 'Oui',
               cancelButtonText: 'Non',
@@ -135,14 +132,7 @@ export class PurchaseComponent implements OnInit {
 
       this.loader.hide();
     })
-    /*  .catch(err => {
-        this.loader.hide();
-        this.notifacationService.error("Error while getting NFT cards");
-      });*/
-
-    return 'ok'
-
-  }
+ }
 
   applyReduction(reduction) {
     return this.price = this.price - (this.price * reduction / 100)

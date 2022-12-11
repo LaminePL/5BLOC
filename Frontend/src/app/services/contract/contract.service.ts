@@ -182,7 +182,7 @@ export class ContractService {
         return instance.showTicket(address, {from: address});
       }).then((status) => {
         if (status) {
-          return resolve(status);
+               return resolve(status);
         }
       }).catch((error) => {
         console.log(error);
@@ -198,7 +198,7 @@ export class ContractService {
       const paymentContract = contract(PurchaseAbi);
       paymentContract.setProvider(this.provider);
       paymentContract.deployed().then((instance) => {
-        return instance.buyTickets(this.accounts[0], departure, arrival, travelTime, name, price, {
+        return instance.buyTickets(this.accounts[0], departure, arrival, travelTime, name, this.web3.utils.toWei(price, 'ether'), {
             from: this.accounts[0],
             value: this.web3.utils.toWei(price, 'ether')
           , gas: 1000000

@@ -9,8 +9,6 @@ contract Purchase {
         uint price;
     }
 
-    uint price = 1 ether;
-
     struct walet {
         Ticket[] ticketList;
     }
@@ -22,11 +20,12 @@ contract Purchase {
         return address(this).balance;
     }
 
-    function buyTickets( address _buyer,  string memory _departure ,  string memory _arrival ,string memory _travelTime, string memory _name, uint _price) public payable returns (Ticket[] memory) {
-        // require(msg.value == price,"You mustsend 1 ETH to buy a ticket");
+    function buyTickets(address _buyer, string memory _departure, string memory _arrival, string memory _travelTime,
+        string memory _name, uint _price) public payable returns (Ticket[] memory)
+    {
         require(_buyer.balance >= msg.value, 'Solde insuffisant');
-        userTowalet[msg.sender].ticketList.push(Ticket(_departure,_arrival,_travelTime,_name, _price));
-        emit NewTicket(_departure,_arrival,_travelTime,_name, _price);
+        userTowalet[msg.sender].ticketList.push(Ticket(_departure, _arrival, _travelTime, _name, _price));
+        emit NewTicket(_departure, _arrival, _travelTime, _name, _price);
         return userTowalet[msg.sender].ticketList;
     }
 
