@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>Destination</h1>
+<div mat-dialog-content class="row" [formGroup]="form" >
+
+  <mat-form-field appearance="outline" class="col">
+    <mat-label>Adresse</mat-label>
+    <input matInput placeholder="Adresse" formControlName="address">
+  </mat-form-field>
+
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Fermer</button>
+  <button mat-button [disabled]="!form.valid" (click)="validate($event)">Valider</button>
+</div>

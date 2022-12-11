@@ -1,0 +1,18 @@
+.spinner-body{
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background: #8e8d8d1f;
+  z-index: 100;
+}
+
+mat-spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 1000;
+  width: 100px;
+  height: 100px;
+}
+
+

@@ -1,0 +1,42 @@
+<mat-sidenav-container class="side-container" >
+  <mat-sidenav   class="sidenav" fixedInViewport
+               role="navigation"
+               mode="side"
+               opened="true"
+  style="background: floralwhite">
+    <img src="/assets/logo.png" alt="image" class="logo">
+
+    <mat-nav-list class="nav-list">
+      <mat-list-item [routerLink]="['/home']">
+        <mat-icon>home</mat-icon>
+       Acceuil
+      </mat-list-item>
+      <mat-list-item [routerLink]="['/my-cards']">
+        <mat-icon>money</mat-icon>
+        Mes cartes
+      </mat-list-item>
+      <mat-list-item [routerLink]="['/ticket-list']">
+        <mat-icon>credit_card</mat-icon>
+        mes tickets
+      </mat-list-item>
+      <mat-list-item [routerLink]="['/create-card']" *ngIf="isAdmin">
+        <mat-icon>sell</mat-icon>
+        Ajouter une carte
+      </mat-list-item>
+
+    </mat-nav-list>
+  </mat-sidenav>
+ <mat-sidenav-content class="sidenav-content">
+    <mat-toolbar color="primary">
+        <span>Angular NFT</span>
+      <span class="example-spacer"></span>
+      <button mat-icon-button [routerLink]="['/account']">
+        <mat-icon>person</mat-icon>
+      </button>
+    </mat-toolbar>
+      <router-outlet class="body-router"></router-outlet>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
+
+
