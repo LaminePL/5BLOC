@@ -1,0 +1,25 @@
+.card {
+    width: 200px;
+  }
+
+  .color-black{
+    color: black !important;
+  }
+
+  .max-lines-3{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+  .card-list{
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .buttons-container{
+    display: flex;
+    justify-content: space-between;
+  }

@@ -1,0 +1,44 @@
+.card {
+  max-width: 330px;
+  cursor: pointer;
+}
+
+.color-black{
+  color: black !important;
+}
+
+.content{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  width: 100%;
+    margin-top: 10%;
+}
+
+.card-home:hover{
+  transform: scale(1.1);
+  transition: transform 300ms;
+
+
+
+}
+.ticket-home:hover{
+  transform: scale(1.1);
+  transition: transform 300ms;
+
+
+}
+
+.card-block{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+.ticket-block{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-wrap: nowrap;
+}
